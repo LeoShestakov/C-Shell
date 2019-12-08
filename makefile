@@ -1,11 +1,8 @@
-all: main.o functions.o
-	gcc -o scoop main.c functions.c
+all: main.o
+	gcc -o scoop main.c
 
-main.o: main.c functions.h
+main.o: main.c
 	gcc -c main.c
-
-functions.o: functions.c functions.h
-	gcc -c functions.c
 
 run:
 	./scoop
