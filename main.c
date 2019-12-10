@@ -15,20 +15,32 @@ int main() {
     char curdir [100];
     getcwd(curdir, 100);
 
-    printf("%s$ ", curdir);
+    printf("%s $ ", curdir);
     char input[100];
     fgets(input, 100, stdin);
     input[strlen(input) - 1] = NULL;
     char ** newInput = processInput(input);
 
+
     pid_t pid;
     time_t t;
     int status;
     pid = fork();
-    execvp(newInput[0], newInput);
-    do{
-      pid = waitpid(pid, &status, WNOHANG);
-    } while (pid == 0);
+
+    if(!strcmp(newInput[0], "cd")){
+      chdir(newInput[1]);
+      pid = wait(&status);
+    }
+    else if(! strcmp(newInput[0], "exit")){
+        exit(0);
+    }
+    else if (pid > 0){
+        pid = wait(&status);
+    }
+    else if (pid == 0){
+        printf("NORMAL EXEC");
+        execvp(newInput[0], newInput);
+    }
   }
 }
 
