@@ -15,7 +15,7 @@ int main() {
     char curdir [100];
     getcwd(curdir, 100);
 
-    printf("%s $ ", curdir);
+    printf("SCOOP [%s] $ ", curdir);
     char input[100];
     fgets(input, 100, stdin);
     input[strlen(input) - 1] = NULL;
