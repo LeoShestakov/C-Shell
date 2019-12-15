@@ -39,7 +39,7 @@ int main() {
           pid = wait(&status);
       }
       else if (pid == 0){
-          printf("NORMAL EXEC");
+          printf("NORMAL EXEC\n");
           execvp(newInput[x][0], newInput[x]);
       }
       x++;
@@ -55,14 +55,15 @@ char *** processInput(char *line){
     char*** input = malloc(0);
     int x = 0;
     while(line){
-      input[x] = realloc(input[x], sizeof(char*)*current + sizeof(char*));
+      input[x] = realloc(input[x], sizeof(char*)*current + sizeof(char*) + 10);
       input[x][current] = strsep(&line, " ");
-      //printf("%s", input[x][current]);
+      printf("%s\n", input[x][current]);
       if (!strcmp(input[x][current],";")){
         input[x][current] = NULL;
         x++;
         current = 0;
-      } else {
+      } 
+	  else {
         current++;
       }
     }
