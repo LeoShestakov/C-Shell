@@ -9,3 +9,9 @@ run:
 
 clean:
 	rm *.o
+
+debug: main.c
+	gcc -g main.c
+
+gdb: a.out
+	gdb a.out
