@@ -45,7 +45,7 @@ int main() {
       x++;
     }
   }
- printf("test");
+ //printf("test");
   //processInput("hello buddy this is ; a test ; of our function");
 }
 
@@ -57,7 +57,7 @@ char *** processInput(char *line){
     while(line){
       input[x] = realloc(input[x], sizeof(char*)*current + sizeof(char*));
       input[x][current] = strsep(&line, " ");
-      printf("%s", input[x][current]);
+      //printf("%s", input[x][current]);
       if (!strcmp(input[x][current],";")){
         input[x][current] = NULL;
         x++;
