@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,56 +28,55 @@ int main() {
 			pid_t pid;
 			time_t t;
 			int status;
-			
+
 			if(!strcmp(newInput[x][0], "cd")){
 				chdir(newInput[x][1]);
 			}
 			else if(! strcmp(newInput[x][0], "exit")){
 				return 0;
 			}
-			
+
 			else {
 				int n;
-				int redirect;
-				int rIndex;
-				int redirect2;
-				int rIndex2;
-				int stdin_fd = STDIN_FILENO;
-			
+				int redirect = 0;
+				int rIndex = 0;
+				int redirect2 = 0;
+				int rIndex2 = 0;
+
 				for (n = 0; newInput[x][n] != 0; n++) {
 					if (!strcmp(newInput[x][n], ">")) {
 						rIndex = n;
 						redirect = 1;
 					}
-				}
-				for (n = 0; newInput[x][n] != 0; n++) {
 					if (!strcmp(newInput[x][n], "<")) {
 						rIndex2 = n;
 						redirect2 = 1;
 					}
 				}
-				
+			
 				pid = fork();
 				if (pid > 0){
 					pid = wait(&status);
 				}
 				else if (pid == 0){
+					int last = 1;
 					if (redirect) {
-						int fd = open(newInput[x][rIndex + 1], O_RDWR|O_CREAT|O_TRUNC, 0755);
-						int desc = dup(STDOUT_FILENO);
-						dup2(fd, 1);
-						close(fd);
-						close(desc);
-						newInput[x][rIndex] = NULL;
+						last = 0;
+						int out = open(newInput[x][rIndex + 1], O_RDWR|O_CREAT|O_TRUNC, 0755);
+						int d = dup(STDOUT_FILENO);
+						dup2(out, 1);
 						execvp(newInput[x][rIndex - 1], newInput[x]);
+						close(out);
+						close(d);
 					}
 					if (redirect2) {
+						last = 0;
 						int fd = open(newInput[x][rIndex2 + 1], O_RDONLY);
 						dup2(fd, STDIN_FILENO);
 						newInput[x][rIndex2] = NULL;
 						execvp(newInput[x][0], newInput[x]);
 					}
-					else {
+					if (last) {
 						execvp(newInput[x][0], newInput[x]);
 					}
 				}
@@ -101,7 +101,7 @@ char *** processInput(char *line){
 			input[x][current] = NULL;
 			x++;
 			current = 0;
-		} 
+		}
 		else {
 			current++;
 		}
