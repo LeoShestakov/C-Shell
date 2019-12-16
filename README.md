@@ -1,6 +1,6 @@
 # C-Shell (Seashell)
 
-**created by Leo Shestakov and Alex Thompson**
+**Created by Leo Shestakov and Alex Thompson**
 
 **Everything is condensed to one file (except the makefile).**
 
