@@ -6,6 +6,7 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <errno.h>
 
 char *** processInput(char *line);
@@ -26,21 +27,41 @@ int main() {
 			pid_t pid;
 			time_t t;
 			int status;
-	  
+			
 			if(!strcmp(newInput[x][0], "cd")){
 				chdir(newInput[x][1]);
 			}
 			else if(! strcmp(newInput[x][0], "exit")){
 				return 0;
 			}
-	  
+			
 			else {
+				int n;
+				int redirect;
+				int rIndex;
+			
+				for (n = 0; newInput[x][n] != 0; n++) {
+					if (!strcmp(newInput[x][n], ">")) {
+						rIndex = n;
+						redirect = 1;
+					}
+				}
 				pid = fork();
 				if (pid > 0){
 					pid = wait(&status);
 				}
 				else if (pid == 0){
-					execvp(newInput[x][0], newInput[x]);
+					if (redirect) {
+						int out = open(newInput[x][rIndex + 1], O_RDWR|O_CREAT|O_TRUNC, 0755);
+						int d = dup(STDOUT_FILENO);
+						dup2(out, 1);
+						close(out);
+						close(d);
+						execvp(newInput[x][rIndex - 1], newInput[x]);
+					}
+					else {
+						execvp(newInput[x][0], newInput[x]);
+					}
 				}
 			}
 		free(newInput[x]);
