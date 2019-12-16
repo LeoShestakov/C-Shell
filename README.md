@@ -1,5 +1,7 @@
 # C-Shell (Seashell)
 
+**created by Leo Shestakov and Alex Thompson**
+
 **Everything is condensed to one file (except the makefile).**
 
 Our shell implements exit & cd explicitly and has support for multiple commands. In addition, we utilize both forms of simple redirection (< and >), as well as pipes (|). We completed the entire assignment and have removed bugs. However, there is minimal error catching and we often times assume that the input is valid.
