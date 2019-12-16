@@ -10,4 +10,4 @@ Function headers:
   * int main();
   * char *** processInput(char *line);
 
-Each function description can be found right above its header in main.c, instead of here.
+Each function description can be found right above its header in **main.c**, instead of here.
