@@ -39,6 +39,9 @@ int main() {
 				int n;
 				int redirect;
 				int rIndex;
+				int redirect2;
+				int rIndex2;
+				int stdin_fd = STDIN_FILENO;
 			
 				for (n = 0; newInput[x][n] != 0; n++) {
 					if (!strcmp(newInput[x][n], ">")) {
@@ -46,18 +49,32 @@ int main() {
 						redirect = 1;
 					}
 				}
+				for (n = 0; newInput[x][n] != 0; n++) {
+					if (!strcmp(newInput[x][n], "<")) {
+						rIndex2 = n;
+						redirect2 = 1;
+					}
+				}
+				
 				pid = fork();
 				if (pid > 0){
 					pid = wait(&status);
 				}
 				else if (pid == 0){
 					if (redirect) {
-						int out = open(newInput[x][rIndex + 1], O_RDWR|O_CREAT|O_TRUNC, 0755);
-						int d = dup(STDOUT_FILENO);
-						dup2(out, 1);
-						close(out);
-						close(d);
+						int fd = open(newInput[x][rIndex + 1], O_RDWR|O_CREAT|O_TRUNC, 0755);
+						int desc = dup(STDOUT_FILENO);
+						dup2(fd, 1);
+						close(fd);
+						close(desc);
+						newInput[x][rIndex] = NULL;
 						execvp(newInput[x][rIndex - 1], newInput[x]);
+					}
+					if (redirect2) {
+						int fd = open(newInput[x][rIndex2 + 1], O_RDONLY);
+						dup2(fd, STDIN_FILENO);
+						newInput[x][rIndex2] = NULL;
+						execvp(newInput[x][0], newInput[x]);
 					}
 					else {
 						execvp(newInput[x][0], newInput[x]);
